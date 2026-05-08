@@ -42,10 +42,12 @@ even_len([_,_|T]) :-
 
 
 % -------- REMOVE DUPLICATES (keep first occurrence) --------
-remove_duplicate([], []).
-remove_duplicate([H|T], [H|R]) :-
-    not(member(R,H)),
-    remove_duplicate(T, R).
-remove_duplicate([H|T], R) :-
-    member(R,H),
-    remove_duplicate(T, R).
+duplicate_head([], Seen, Seen).
+
+duplicate_head([Head | Tail], Seen, Result) :- 
+    member(Head, Seen) -> duplicate_head(Tail, Seen, Result) ; 
+    duplicate_head(Tail, [Head | Seen], Result).
+
+remove_duplicate(List, Result) :- 
+    duplicate_head(List, [], Temp), 
+    reverse_list(Temp, Result).
